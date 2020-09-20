@@ -1,0 +1,43 @@
+from pandas import DataFrame
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn import datasets, linear_model, model_selection
+
+X=[]
+Y=[]
+with open("D:\\MYSELF\\University\\test\\data_1.txt","r") as f:       #读取txt文件。
+    for line in f:
+        p_tmp, E_tmp = [float(i) for i in line.split(',')]
+        X.append(p_tmp)
+        Y.append(E_tmp)
+        
+data=DataFrame(X,columns={'a'})#columns列索引
+data['b']=Y
+X=DataFrame(X)
+
+fig = plt.figure()                                    
+ax1 = fig.add_subplot(1,1,1)      #一行一列一个子图（子图位置从左到右从上到下）
+plt.scatter(data['a'],data['b'])  #绘制散点
+
+ 
+def linear_model_main(X,Y,predict_value):        #定义一个使用线性回归的函数
+    reg=linear_model.LinearRegression()
+    reg.fit(X,Y)       #训练模型
+    predict_output=reg.predict(predict_value)    #预测
+    predictions={}
+    predictions['intercept']=reg.intercept_      #截距
+    predictions['codfficient']=reg.coef_         #斜率（参数）
+    predictions['predict_value']=predict_output  #预测值
+    return predictions
+    
+result = linear_model_main(X,Y,[[1500]])         #调用函数
+print(result['predict_value'])
+ 
+ 
+def show_predict(X,Y):
+    reg=linear_model.LinearRegression()
+    reg.fit(X,Y)  
+    plt.scatter(X,Y,color='blue')
+    plt.plot(X,reg.predict(X),color='red')
+    
+show_predict(X,Y)
